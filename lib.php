@@ -323,6 +323,9 @@ class repository_s3bucket extends repository {
         foreach ($endpoints as $key => $value) {
             $endpointselect[$key] = $value['description'];
         }
+        
+        // Add custom S3-compatible endpoints.
+        $endpointselect['linode-fr-par'] = 'Linode - France (Paris)';
 
         $mform->addElement('passwordunmask', 'access_key', get_string('access_key', 'repository_s3'), $textops);
         $mform->setType('access_key', PARAM_RAW_TRIMMED);
@@ -349,7 +352,18 @@ class repository_s3bucket extends repository {
     public static function instance_form_validation($mform, $data, $errors) {
         if (isset($data['access_key']) && isset($data['secret_key']) && isset($data['bucket_name'])) {
             $credentials = ['key' => $data['access_key'], 'secret' => $data['secret_key']];
-            $arr = self::addproxy(['credentials' => $credentials, 'region' => $data['endpoint']]);
+            $endpoint = $data['endpoint'];
+            
+            // Configure S3 client for validation.
+            $arr = ['credentials' => $credentials, 'use_path_style_endpoint' => true];
+            if ($endpoint === 'linode-fr-par') {
+                $arr['endpoint'] = 'https://fr-par-1.linodeobjects.com';
+                $arr['region'] = 'fr-par-1';
+            } else {
+                $arr['region'] = $endpoint;
+            }
+            
+            $arr = self::addproxy($arr);
             $s3 = \Aws\S3\S3Client::factory($arr);
             try {
                 // Check if the bucket exists.
@@ -390,10 +404,22 @@ class repository_s3bucket extends repository {
             if (empty($accesskey)) {
                 throw new \moodle_exception('needaccesskey', 'repository_s3');
             }
-            $arr = self::addproxy([
+            $endpoint = $this->get_option('endpoint');
+            $arr = [
                 'credentials' => ['key' => $accesskey, 'secret' => $this->get_option('secret_key')],
                 'use_path_style_endpoint' => true,
-                'region' => $this->get_option('endpoint'), ]);
+            ];
+            
+            // Handle custom endpoints vs AWS regions.
+            if ($endpoint === 'linode-fr-par') {
+                $arr['endpoint'] = 'https://fr-par-1.linodeobjects.com';
+                $arr['region'] = 'fr-par-1';
+            } else {
+                // Standard AWS region.
+                $arr['region'] = $endpoint;
+            }
+            
+            $arr = self::addproxy($arr);
             $this->s3client = \Aws\S3\S3Client::factory($arr);
         }
         return $this->s3client;

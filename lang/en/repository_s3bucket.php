@@ -40,3 +40,4 @@ $string['pluginname_help'] = 'AWS S3 bucket repository';
 $string['privacy:metadata'] = 'The AWS S3 bucket repository plugin does not store any personal data, but can transmit files from Moodle to AWS.';
 $string['s3bucket:view'] = 'View AWS S3 bucket repository';
 $string['storageclass'] = 'Storage class';
+$string['linode_fr_par'] = 'Linode France (Paris) - S3-compatible object storage';
