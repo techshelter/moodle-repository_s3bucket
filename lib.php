@@ -324,16 +324,27 @@ class repository_s3bucket extends repository {
             $endpointselect[$key] = $value['description'];
         }
         
-        // Add custom S3-compatible endpoints.
+        // Add Linode S3-compatible endpoints.
+        $endpointselect['linode-us-east-1'] = 'Linode - US East (Newark)';
+        $endpointselect['linode-us-west-1'] = 'Linode - US West (Fremont)';
+        $endpointselect['linode-us-central-1'] = 'Linode - US Central (Dallas)';
+        $endpointselect['linode-us-southeast-1'] = 'Linode - US Southeast (Atlanta)';
+        $endpointselect['linode-ca-central-1'] = 'Linode - Canada (Toronto)';
+        $endpointselect['linode-eu-west-1'] = 'Linode - Europe (London)';
+        $endpointselect['linode-eu-central-1'] = 'Linode - Europe (Frankfurt)';
         $endpointselect['linode-fr-par'] = 'Linode - France (Paris)';
+        $endpointselect['linode-ap-south-1'] = 'Linode - Asia Pacific (Mumbai)';
+        $endpointselect['linode-ap-northeast-1'] = 'Linode - Asia Pacific (Tokyo)';
+        $endpointselect['linode-ap-southeast-1'] = 'Linode - Asia Pacific (Singapore)';
+        $endpointselect['linode-ap-southeast-2'] = 'Linode - Asia Pacific (Sydney)';
 
-        $mform->addElement('passwordunmask', 'access_key', get_string('access_key', 'repository_s3'), $textops);
+        $mform->addElement('passwordunmask', 'access_key', get_string('access_key', 'repository_s3bucket'), $textops);
         $mform->setType('access_key', PARAM_RAW_TRIMMED);
-        $mform->addElement('passwordunmask', 'secret_key', get_string('secret_key', 'repository_s3'), $textops);
+        $mform->addElement('passwordunmask', 'secret_key', get_string('secret_key', 'repository_s3bucket'), $textops);
         $mform->setType('secret_key', PARAM_RAW_TRIMMED);
         $mform->addElement('text', 'bucket_name', get_string('bucketname', 'repository_s3bucket'), $textops);
         $mform->setType('bucket_name', PARAM_RAW_TRIMMED);
-        $mform->addElement('select', 'endpoint', get_string('endpoint', 'repository_s3'), $endpointselect);
+        $mform->addElement('select', 'endpoint', get_string('endpoint', 'repository_s3bucket'), $endpointselect);
         $mform->setDefault('endpoint', 'us-east-1');
 
         $mform->addRule('access_key', $strrequired, 'required', null, 'client');

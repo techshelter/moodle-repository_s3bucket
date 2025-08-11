@@ -41,3 +41,6 @@ $string['privacy:metadata'] = 'The AWS S3 bucket repository plugin does not stor
 $string['s3bucket:view'] = 'View AWS S3 bucket repository';
 $string['storageclass'] = 'Storage class';
 $string['linode_fr_par'] = 'Linode France (Paris) - S3-compatible object storage';
+$string['access_key'] = 'Access key';
+$string['secret_key'] = 'Secret key';
+$string['endpoint'] = 'Endpoint';
